@@ -1,0 +1,1 @@
+I clearted a color genrater in JS
