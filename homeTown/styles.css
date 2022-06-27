@@ -1,0 +1,308 @@
+/**
+RED: #E63946
+LIGHT: #F1FAEE
+AQUA: #A8DADC
+LIGHT BLUE: #457B9D
+DARK BLUE: #1D3557
+*/
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+    /* overflow: hidden; */
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.content {
+    margin: 0 auto;
+ }
+
+ul
+{
+	position: absolute;
+	top:6%;
+	left:50%;
+	transform:translate(-50%, -50%);
+	margin-bottom:1em;
+	padding-bottom:1em;
+	display: flex;
+}
+
+ul li
+{
+	list-style: none;
+	color: #ffffff;
+	font-size: 18px;
+	font-family: verdana;
+	letter-spacing:10px;
+	animation: animate 2.8s linear infinite;
+    text-shadow: 0 0 5px white;
+}
+
+ul li:nth-child(1)
+{
+	animation-delay: 0.2s;
+}
+ul li:nth-child(2)
+{
+	animation-delay: 0.4s;
+}
+ul li:nth-child(3)
+{
+	animation-delay: 0.6s;
+}
+ul li:nth-child(4)
+{
+	animation-delay: 0.8s;
+}
+ul li:nth-child(5)
+{
+	animation-delay: 1s;
+}
+ul li:nth-child(6)
+{
+	animation-delay: 1.2s;
+}
+ul li:nth-child(7)
+{
+	animation-delay: 1.4s;
+}
+ul li:nth-child(8)
+{
+	animation-delay: 1.6s;
+}
+ul li:nth-child(9)
+{
+	animation-delay: 1.8s;
+}
+ul li:nth-child(10)
+{
+	animation-delay: 2s;
+}
+ul li:nth-child(11)
+{
+	animation-delay: 2.2s;
+}
+ul li:nth-child(12)
+{
+	animation-delay: 2.4s;
+}
+ul li:nth-child(13)
+{
+	animation-delay: 2.6s;
+}
+ul li:nth-child(14)
+{
+	animation-delay: 2.8s;
+}
+
+
+
+@keyframes animate
+{
+	0%
+	{
+		color: #0f1011;
+		text-shadow: none;
+		transform: scale(1);
+
+	}
+	90%
+	{
+		color: #16181a;
+		text-shadow: none;
+		transform: scale(1);
+	}
+	100%
+	{
+		color: #fff900;
+		text-shadow: 0 0 7px #fff900, 0 0 50px #ff6c00;
+		transform: scale(1.5);
+	}
+}
+
+#hero{
+    background-image: url("images/Swaida_city.jpg");
+    background-repeat: no-repeat;
+    /* background-position: center; */
+    background-position: 45% 45%, center;
+    background-size: cover;
+
+    padding: 5em 1em 2em;
+    /*this for flex box*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h2{
+    text-shadow: 0px 0px 8px black;
+}
+
+#title{
+    /* background: linear-gradient(#457B9D, #1D3557); */
+    background: linear-gradient(to right, rgba(255,0,0,0), rgb(141, 139, 139));
+    padding: 1em;
+    border-radius: 6px;
+    color:#ffffff;
+}
+
+#description{
+    background: linear-gradient(to right, rgba(255,0,0,0), rgb(141, 139, 139));
+    padding: 5px 10px;
+    border-radius: 6px;
+    margin-top: 2.5em;
+    margin-bottom:0.3em;
+    color:#FFFFFF;
+}
+
+#Activities{
+    background-color:#d0f4de;
+    padding: 10px;
+    margin: 0 auto;
+}
+
+/* (B) FLASH ANIMATION */
+@keyframes flash {
+  /* (B1) FROM RED */
+  from {
+    text-shadow:
+    0 0 5px #be03fc, 0 0 10px #be03fc,
+    0 0 20px #be03fc, 0 0 40px #be03fc;
+  }
+  /* (B2) TO BLUE */
+  to {
+    text-shadow:
+    0 0 5px #62fc03, 0 0 10px #3103fc,
+    0 0 20px #9003fc, 0 0 40px #fc3503;
+  }
+}
+
+#topPlaces{
+    animation: flash 0.2s ease infinite alternate;
+    margin: 10px auto 20px auto;
+    letter-spacing: 5px;
+}
+
+#imagesPlaces{
+    display: flex;
+    justify-content: space-around;
+    gap: 10px 10px; /* this control the gap between the flex box items */
+    padding: 1em;
+}
+
+/*how can you make sure all size
+ picture are the same in css*/
+#pic1, #pic2, #pic3{
+    width:  80px;
+    height: 80px;
+    border-radius: 60%;
+    border: 1px solid #000000;
+}
+
+.pargh{
+    font-weight: normal;
+    font-size: .8rem;
+    line-height: 12px;
+    margin: 0;
+    padding: 0;
+    letter-spacing: 1px;
+    line-height: 1.3;
+
+}
+
+.titlePlace{
+    color: #000000;
+    font-weight: bold;
+    font-size: .9rem;
+    margin-bottom: .3em;
+}
+
+.titlePlace a{
+    letter-spacing: 2px;
+    text-decoration: none;
+}
+
+.titlePlace a:hover{
+    color: #e63946;
+    text-shadow: 0 0 4px #000814;
+    transform: translate(0px, 4px);
+}
+
+#footer{
+    padding: 2em;
+}
+
+.avatar {
+    width: 160px;
+    border-radius: 5px !important;
+}
+
+#gudie{
+    width: 400px;
+    height: 200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    color: #1D3557;
+    background: #A8DADC;
+    box-shadow: 0px 6px 0px #1D3557;
+    border-radius: 10px;
+}
+
+.titleGuides{
+    font-family: 'Arial';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 10px;
+}
+
+#story{
+    font-family: 'Arial';
+    font-style: italic;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+}
+
+.allOne{
+    background: wheat;
+}
+
+@media (min-width: 682px){
+    body{
+        overflow:hidden;
+    }
+    .container {
+        width: 700px;
+        margin: 0 auto;
+    }
+
+    #description{
+        font-size: 1.2rem;
+        padding-right: 5em;
+    }
+
+    #imagesPlaces{
+        padding-right: 2.3em;
+    }
+
+    #hero{
+        padding: 4em 1em 2em;
+    }
+
+    #footer{
+        padding-top: 1em;
+        margin-bottom: 0.6;
+    }
+}
