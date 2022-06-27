@@ -23,6 +23,10 @@ body {
     margin: 0 auto;
  }
 
+.container {
+    width: 700px;
+}
+
 ul
 {
 	position: absolute;
