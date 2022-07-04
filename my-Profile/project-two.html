@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Rawad Portfolio Website</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />  
+        
+        <!-- Update these with your own fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700|Roboto+Slab:400,700&display=swap" rel="stylesheet"> 
+        
+        <link rel="stylesheet" href="css/style.css">
+
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <img src="img/web-development.png" alt="">
+            </div>
+            <button class="nav-toggle" aria-label="toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="index.html" class="nav__link">Home</a></li>
+                    <li class="nav__item"><a href="index.html#services" class="nav__link">My Services</a></li>
+                    <li class="nav__item"><a href="index.html#about" class="nav__link">About me</a></li>
+                    <li class="nav__item"><a href="index.html#work" class="nav__link">My Work</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+
+        <section class="intro">
+            <h1 class="section__title section__title--intro">
+                <strong>IoT Flowerpot</strong>
+            </h1>
+            <p class="section__subtitle section__subtitle--intro">App for a Flowerpot System</p>
+            <img src="img/Java-or-Kotlin.jpeg" alt="" class="intro__img">
+        </section>
+        
+        <div class="portfolio-item-individual">
+            <p>This project consists of two parts build a flowerpot system and mobile app for iOS and Android using Java, Kotlin, C++ for Arduino</p>
+            <img src="img/flowers.jpg" alt="App for flowerpot">
+            <p>The app connects to an Arduino in the flowerpot system and sends commands to control and read from different peripherals attached to the flowerpot in real time.</p>
+            <p>The flowerpot included the following components:</p>
+            <ul class="list-item">
+                <li>Arduino</li>
+                <li>Thermometer</li>
+                <li>Temperature</li>
+                <li>pH scale</li>
+                <li>Humidity</li>
+                <li>Water pump</li>
+                <li>Light sensor</li>
+            </ul>
+        </div>
+        
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <!-- replace with your own email address -->
+            <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;%72%61%77%61%64%62%61%64%65%72%34%36%36%40%67%6D%61%69%6C%2E%63%6F%6D?subject=%52%61%77%61%64%20%42%61%64%65%72" class="footer__link"  target="_blank">Get in touch
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+            </a>
+              <ul class="social-list">
+                <li class="social-list__item">
+                    <a class="social-list__link" href="resume/Rawad's_Resume.pdf" download>
+                        <i class="fa fa-download" aria-hidden="true"><span style="font-size: .8em;color:#fff;"> Resume</span></i>
+                    </a>
+                </li>
+                <li class="social-list__item">
+                    <a class="social-list__link" href="https://www.figma.com/files/recent?fuid=1089748406241697505">
+                        <i class="fab fa-figma"></i>
+                    </a>
+                </li>
+                <li class="social-list__item">
+                    <a class="social-list__link" href="https://twitter.com">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </li>
+                <li class="social-list__item">
+                    <a class="social-list__link" href="https://github.com">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </li>
+            </ul>
+        </footer>
+        
+        
+        <script src="js/index.js"></script>
+        
+    </body>
+</html>
