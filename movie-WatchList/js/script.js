@@ -2,8 +2,29 @@ const searchInput = document.querySelector(`.search-text`)
 const searchResult = document.querySelector(`main.search.container`)
 const watchlist = document.querySelector(`main.watchlist.container`)
 const searchBtn = document.querySelector(`.search-btn`)
-const baseURL = `https://www.omdbapi.com/?apikey=9ebca557`
-const pageIdentifier = document.URL.includes(`index.html`) ? `search` : `watchlist`
+// The OMDb API key is NOT stored in this file. Put your own key in js/config.js (see js/config.example.js).
+// Note: any key used by a browser-only site is visible to visitors, so use a free key you can rotate.
+const OMDB_API_KEY = window.OMDB_API_KEY || ``
+
+// Builds an OMDb request URL. URLSearchParams encodes every value, so search text such as "Tom & Jerry"
+// cannot split the query or add extra parameters (for example a different apikey).
+function omdbUrl(params) {
+    return `https://www.omdbapi.com/?${new URLSearchParams({ apikey: OMDB_API_KEY, ...params })}`
+}
+
+// Escapes text before it is put into HTML, so film data such as a title with quotes or tags is shown as plain text.
+function esc(text) {
+    return String(text ?? ``).replace(/[&<>"']/g, char => ({ '&': `&amp;`, '<': `&lt;`, '>': `&gt;`, '"': `&quot;`, "'": `&#39;` }[char]))
+}
+
+// Poster links must be web addresses; anything else (for example a javascript: link) is treated as "no poster"
+function safePosterUrl(url) {
+    return /^https?:\/\//i.test(url || ``) ? url : null
+}
+
+// Which page is this? The search page has a search box; the watchlist page does not.
+// (Checking the URL for "index.html" broke when the site was opened at the folder address.)
+const pageIdentifier = searchInput ? `search` : `watchlist`
 const cardFallbackCover = `<svg class="card-fallback-cover" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 192">
                                 <g>
                                 <path d="M89.3,52.3c7.6,0,13.7-6.1,13.7-13.7s-6.1-13.7-13.7-13.7S75.6,31,75.6,38.6S81.7,52.3,89.3,52.3z"/>
@@ -51,7 +72,7 @@ if(searchInput) {
     /* searchBtn click triggers fetch request by keyword, 10 results per page are returned if response Ok,
     each result prompts another fetch by id for film info,
     content added to searchResult */
-    searchBtn.addEventListener(`click`, () => initialLoad(searchInput.value.trim().toLowerCase().replace(/\s+/g, '+')))
+    searchBtn.addEventListener(`click`, () => initialLoad(searchInput.value.trim().toLowerCase().replace(/\s+/g, ` `)))
     // Enter key fired on non-empty searchInput values initiates click on searchBtn, or displays searchResultPlaceholder otherwise
     searchInput.addEventListener("keypress", event => {
         if (event.key === "Enter") searchBtn.click()
@@ -82,18 +103,28 @@ async function initialLoad(currentInput) {
     // if statements to prevent redundant search operations if searchInput hasn't changed from prevInput, or if it's empty string
     if (currentInput === ``) searchResult.innerHTML = searchResultPlaceholder
     else if(currentInput != prevInput) {
-        const res = await fetch(`${baseURL}&page=1&s=${currentInput}`)
-        const data = res.ok ? await res.json() : new Error('Something went wrong')
-        const totalResults = parseInt(data.totalResults)
-        currentPage = 1
-        if(data.Response === `False` || totalResults === 0) searchResult.innerHTML = `<div class="no-results placeholder-txt contrast-boosted">Unable to find what you’re looking for. Please try another search.</div>`
-        else {
-            pagesNumber = Math.ceil(totalResults/data.Search.length)
-            searchResult.innerHTML = `<div class="results-placeholder">${syncLoadAnimation}</div>`
-            searchResult.innerHTML = await getFilmsCardsHTML(data.Search.map(search => fetch(`${baseURL}&i=${search.imdbID}`)))
+        if (!OMDB_API_KEY) {
+            searchResult.innerHTML = `<div class="no-results placeholder-txt contrast-boosted">Missing API key. Copy js/config.example.js to js/config.js and add your OMDb key.</div>`
+            return
         }
-        if (moreToBeLoaded) loadMore()
-        prevInput = searchInput.value.trim().toLowerCase().replace(/\s+/g, '+')
+        try {
+            const res = await fetch(omdbUrl({ s: currentInput, page: 1 }))
+            if (!res.ok) throw new Error(`OMDb responded with status ${res.status}`)
+            const data = await res.json()
+            const totalResults = parseInt(data.totalResults)
+            currentPage = 1
+            if(data.Response === `False` || !totalResults) searchResult.innerHTML = `<div class="no-results placeholder-txt contrast-boosted">Unable to find what you’re looking for. Please try another search.</div>`
+            else {
+                pagesNumber = Math.ceil(totalResults/data.Search.length)
+                searchResult.innerHTML = `<div class="results-placeholder">${syncLoadAnimation}</div>`
+                searchResult.innerHTML = await getFilmsCardsHTML(data.Search.map(search => fetch(omdbUrl({ i: search.imdbID }))))
+            }
+            if (moreToBeLoaded) loadMore()
+            prevInput = currentInput // remember what was actually searched, so Load More uses the same text
+        } catch (err) {
+            console.error(err)
+            searchResult.innerHTML = `<div class="no-results placeholder-txt contrast-boosted">Something went wrong reaching the movie database. Please try again.</div>`
+        }
     }
 }
 
@@ -104,10 +135,17 @@ function loadMore() {
         loadMoreBtn.outerHTML = ``
         searchResult.innerHTML += syncLoadAnimation
         currentPage++
-        const res = await fetch(`${baseURL}&page=${currentPage}&s=${searchInput.value.replace(/\s+/g, '+')}`)
-        const data = await res.json()
-        searchResult.innerHTML += `<hr>${await getFilmsCardsHTML(data.Search.map(search => fetch(`${baseURL}&i=${search.imdbID}`)))}`
-        searchResult.removeChild(searchResult.querySelector(`.sync-load-animation`))
+        try {
+            // Use the text that was searched (prevInput), not whatever is in the box now
+            const res = await fetch(omdbUrl({ s: prevInput, page: currentPage }))
+            const data = await res.json()
+            if (!data.Search) throw new Error(`No more results`)
+            searchResult.innerHTML += `<hr>${await getFilmsCardsHTML(data.Search.map(search => fetch(omdbUrl({ i: search.imdbID }))))}`
+        } catch (err) {
+            console.error(err)
+        }
+        const loader = searchResult.querySelector(`.sync-load-animation`)
+        if (loader) searchResult.removeChild(loader)
         if (moreToBeLoaded) loadMore()
     })
 }
@@ -116,23 +154,23 @@ function getFilmsCardsHTML(fetchArr) {
     return Promise.all(fetchArr)
         .then(responses => Promise.all(responses.map(res => res.json())))
         .then(pageFilmsData => pageFilmsData.map((filmData, index, pageFilmsData) =>
-            constructFilmCardHTML(filmData.imdbID, filmData.Poster != "N/A" ? filmData.Poster : null, filmData.Title,
-                                  filmData.Ratings.length ? filmData.Ratings[0].Value.slice(0, filmData.Ratings[0].Value.indexOf("/")) : "N/A",
+            constructFilmCardHTML(filmData.imdbID, safePosterUrl(filmData.Poster), filmData.Title,
+                                  filmData.Ratings && filmData.Ratings.length ? filmData.Ratings[0].Value.slice(0, filmData.Ratings[0].Value.indexOf("/")) : "N/A",
                                   filmData.Runtime, filmData.Genre, clipPlotText(filmData.Plot), index, pageFilmsData.length)).join(``))
         .catch(err => console.error(err))
 }
 
 function constructFilmCardHTML(id, poster, title, ratings, runtime, genre, plot, index, length) {
     let html = `
-                <div class="film-card" id="${id}">
-                    ${poster ? `<img class="card-cover" src=${poster} alt="${title} film poster">` : cardFallbackCover}
+                <div class="film-card" id="${esc(id)}">
+                    ${poster ? `<img class="card-cover" src="${esc(poster)}" alt="${esc(title)} film poster">` : cardFallbackCover}
                     <h2 class="card-title">
-                        ${title} <span class="card-rating">${ratings}</span>
+                        ${esc(title)} <span class="card-rating">${esc(ratings)}</span>
                     </h2>
                     <div class="card-group-info">
-                        <p class="card-runtime">${runtime}</p>
-                        <p class="card-genre">${genre}</p>
-                        <button class="btn card-watchlist" onclick="addToOrRemoveFromWatchlist(event)" add-state=${localStorage.getItem(id) ? "removable" : "addable"}>Watchlist</button>
+                        <p class="card-runtime">${esc(runtime)}</p>
+                        <p class="card-genre">${esc(genre)}</p>
+                        <button class="btn card-watchlist" onclick="addToOrRemoveFromWatchlist(event)" add-state="${localStorage.getItem(id) ? "removable" : "addable"}">Watchlist</button>
                     </div>
                     <p class="card-plot">${plot}</p>
                 </div>  <!-- end of film-card -->
@@ -171,10 +209,11 @@ function addToOrRemoveFromWatchlist(event) {
 }
 
 function clipPlotText(plot) {
-    if (plot.length <= 130) return plot
-    else return `   <span class="card-plot-visible-text">${plot.slice(0, 130)}... </span>
+    plot = plot || `N/A`
+    if (plot.length <= 130) return esc(plot)
+    else return `   <span class="card-plot-visible-text">${esc(plot.slice(0, 130))}... </span>
                     <button class="btn card-plot-read-more" onclick="showRemainingPlotText(event)">Read more</button>
-                    <span class="card-plot-remaining-text">${plot.slice(130)} </span>
+                    <span class="card-plot-remaining-text">${esc(plot.slice(130))} </span>
                     <button class="btn card-plot-read-less" onclick="hideRemainingPlotText(event)">Read less</button>
                 `
 }

@@ -1,0 +1,5 @@
+# Personal API key for the movie watchlist (copy js/config.example.js to js/config.js)
+movie-WatchList/js/config.js
+
+# macOS
+.DS_Store

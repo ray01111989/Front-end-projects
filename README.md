@@ -4,15 +4,15 @@ A collection of small front-end projects built with plain HTML, CSS, and JavaScr
 
 ## Projects
 
-| Folder | Description | Files |
+| Folder | Description | Notes |
 |---|---|---|
-| [`colorGenerator`](colorGenerator) | A color generator page | `index.html`, `index.css`, `index.js` |
-| [`homeTown`](homeTown) | A static web page about my hometown | `index.html`, `styles.css`, `images/` |
-| [`movie-WatchList`](movie-WatchList) | A movie search and watchlist app with a separate watchlist page | `index.html`, `watchlist.html`, `css/`, `js/`, `img/` |
+| [`colorGenerator`](colorGenerator) | Color scheme generator using The Color API | No setup needed |
+| [`homeTown`](homeTown) | A static web page about my hometown | No setup needed |
+| [`movie-WatchList`](movie-WatchList) | Search films with the OMDb API and keep a watchlist | Needs a free OMDb API key (see its README) |
 
 ## Run a project
 
-No installation is needed. Clone the repo and open a project's `index.html`:
+Clone the repo and open a project's `index.html`:
 
 ```bash
 git clone https://github.com/ray01111989/Front-end-projects.git
@@ -20,10 +20,13 @@ cd Front-end-projects
 open colorGenerator/index.html    # macOS; use xdg-open on Linux, or double-click the file
 ```
 
+For `movie-WatchList`, first create `movie-WatchList/js/config.js` from `config.example.js` and add your key. That file is git-ignored.
+
 ## Skills practiced
 
 - Semantic HTML and CSS layout
 - DOM manipulation and event handling in vanilla JavaScript
+- Calling public APIs with `fetch`, handling errors, and escaping data before showing it
 - Building multi-page static sites
 
 ## Related

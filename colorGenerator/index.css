@@ -98,7 +98,7 @@ input {
     /*margin: 0 auto;*/
 }
 
-.hex-btn > #myBtn{
+.hex-btn > .hex-copy{
     border: none;
     border-radius: 60%;
     padding: .7em 1em;
@@ -184,7 +184,7 @@ input {
         margin-right: 2em;
     }
 
-    .hex-btn > #myBtn{
+    .hex-btn > .hex-copy{
         border: none;
         border-radius: 20px;
         padding: .7em 3em;  
